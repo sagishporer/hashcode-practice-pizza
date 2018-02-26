@@ -5,7 +5,8 @@
 Algorithm type: greedy. 
 1. Scan the pizza for non-empty position.
 2. Find largest valid slice using this position.
-3. Goto 1 & continue the scan.
+3. Clear all the ingredients contained in the slice.
+4. Goto 1 & continue the scan.
 
 Solution score: 943,711 
 - Example: 12
