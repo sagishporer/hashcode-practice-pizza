@@ -8,5 +8,9 @@ Algorithm type: greedy.
 3. Goto 1 & continue the scan.
 
 Solution score: 943,711 
+- Example: 12
+- Small: 35
+- Medium: 49,216
+- Big: 894,448
 
 Please ignore code style. The objective was to complete the task as fast as possible.
