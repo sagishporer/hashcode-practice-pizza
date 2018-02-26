@@ -8,3 +8,5 @@ Algorithm type: greedy.
 3. Goto 1 & continue the scan.
 
 Solution score: 943,711 
+
+Please ignore code style. The objective was to complete the task as fast as possible.
