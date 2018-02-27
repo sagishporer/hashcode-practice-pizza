@@ -60,6 +60,15 @@ namespace HashCode_Pizza
                     plate[r, c] = this.ID;
         }
 
+        public static int GetSlicesSize(ICollection<PizzaSlice> slices)
+        {
+            int size = 0;
+            foreach (PizzaSlice slice in slices)
+                size += slice.GetSize();
+
+            return size;
+        }
+
         public PizzaSlice BuildShirnkedSliceWithOverlapping(PizzaSlice newSlice)
         {
             // Verify overlap is rect
