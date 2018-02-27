@@ -1,4 +1,6 @@
-﻿namespace HashCode_Pizza
+﻿using System.Collections.Generic;
+
+namespace HashCode_Pizza
 {
     class PizzaSlice
     {
@@ -20,6 +22,23 @@
         public int GetSize()
         {
             return (RowMax - RowMin + 1) * (ColumnMax - ColumnMin + 1);
+        }
+
+        public Dictionary<int, int> GetSliceContent(int[,] plate)
+        {
+            Dictionary<int, int> ingredients = new Dictionary<int, int>();
+            for (int r = RowMin; r <= RowMax; r++)
+                for (int c = ColumnMin; c <= ColumnMax; c++)
+                {
+                    int key = plate[r, c];
+                    int value;
+                    if (ingredients.TryGetValue(key, out value) == false)
+                        value = 0;
+
+                    ingredients[key] = value + 1;
+                }
+
+            return ingredients;
         }
 
         public void RemoveSliceFromPlate(int[,] plate)
