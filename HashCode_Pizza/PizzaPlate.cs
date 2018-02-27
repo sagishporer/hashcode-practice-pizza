@@ -33,12 +33,10 @@ namespace HashCode_Pizza
         public List<PizzaSlice> PerformSlice()
         {
             int[,] plate = (int[,])mPlate.Clone();
-            List<PizzaSlice> slices;                
-            // Create greedy slicing
-            slices = PerformSlice_PhaseOne(plate);
+            List<PizzaSlice> slices = new List<PizzaSlice>();                
 
-            // Try to fill the blacks
-            slices = PerformSlice_PhaseTwo(slices, plate);           
+            // Create greedy slicing. Iterating this phase did not yield better results
+            slices = PerformSlice_PhaseTwo(slices, plate);
 
             return slices;
         }
@@ -57,6 +55,9 @@ namespace HashCode_Pizza
             {
                 for (int c = 0; c < mColumns; c++)
                 {
+                    if (plate[r, c] < 0)
+                        continue;
+
                     PizzaSlice maxSlice = GetMaxSliceExtentionAt(plate, sliceHash, r, c, nextSliceId);
                     if (maxSlice != null)
                     {
@@ -88,18 +89,20 @@ namespace HashCode_Pizza
             PizzaSlice maxSlice = null;
             int maxSliceIngredients = 0;
 
-            for (int r = row; r < mRows; r++)
+            for (int minRow = row; minRow >= Math.Max(0, row - this.mMaxSliceSize); minRow--)
+            for (int maxRow = row; maxRow < Math.Min(row + this.mMaxSliceSize + 1, mRows); maxRow++)
             {
-                for (int c = column; c < mColumns; c++)
+                for (int minCol = column; minCol >= Math.Max(0, column - this.mMaxSliceSize); minCol--)
+                for (int maxCol = column; maxCol < Math.Min(column + this.mMaxSliceSize + 1, mColumns); maxCol++)
                 {
-                    int isValidSlice = IsValidSlice(this.mPlate, row, r, column, c);
+                    int isValidSlice = IsValidSlice(this.mPlate, minRow, maxRow, minCol, maxCol);
                     if ((isValidSlice == CHECK_SLICE_TOO_BIG) || (isValidSlice == CHECK_SLICE_INVALID_SLICE))
                         break;
 
                     if (isValidSlice != CHECK_SLICE_VALID)
                         continue;
 
-                    PizzaSlice newSlice = new PizzaSlice(nextSliceId, row, r, column, c);
+                    PizzaSlice newSlice = new PizzaSlice(nextSliceId, minRow, maxRow, minCol, maxCol);
 
                     // The new slice contains positions previously not in any slice
                     int newSliceIngredients = newSlice.CountIngredients(plate);
@@ -143,57 +146,6 @@ namespace HashCode_Pizza
                     {
                         maxSlice = newSlice;
                         maxSliceIngredients = newSliceIngredients;
-                    }
-                }
-            }
-
-            return maxSlice;
-        }
-
-        public List<PizzaSlice> PerformSlice_PhaseOne(int[,] plate)
-        {
-            List<PizzaSlice> slices = new List<PizzaSlice>();
-            int nextSliceId = -1;
-
-            for (int r = 0; r < mRows; r++)
-            {
-                for (int c = 0; c < mColumns; c++)
-                {
-                    if (mPlate[r, c] > 0)
-                    {
-                        PizzaSlice maxSlice = GetMaxSliceAt(plate, r, c, nextSliceId);
-                        if (maxSlice != null)
-                        {
-                            maxSlice.RemoveSliceFromPlate(plate);
-                            slices.Add(maxSlice);
-                            nextSliceId--;
-                        }
-                    }
-                }
-            }
-
-            return slices;
-        }
-
-        public PizzaSlice GetMaxSliceAt(int[,] plate, int row, int column, int nextSliceId)
-        {
-            PizzaSlice maxSlice = null;
-
-            for (int r = row; r < mRows; r++)
-            {
-                for (int c = column; c < mColumns; c++)
-                {
-                    int isValidSlice = IsValidSlice(plate, row, r, column, c);
-                    if ((isValidSlice == CHECK_SLICE_TOO_BIG) || (isValidSlice == CHECK_SLICE_INVALID_SLICE))
-                        break;
-
-                    if (isValidSlice == CHECK_SLICE_VALID)
-                    {
-                        PizzaSlice newSlice = new PizzaSlice(nextSliceId, row, r, column, c);
-                        if (maxSlice == null)
-                            maxSlice = newSlice;
-                        else if (maxSlice.GetSize() < newSlice.GetSize())
-                            maxSlice = newSlice;
                     }
                 }
             }
