@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HashCode_Pizza
+﻿namespace HashCode_Pizza
 {
     class PizzaSlice
     {
-        public int RowMin;
-        public int RowMax;
-        public int ColumnMin;
-        public int ColumnMax;
+        public int RowMin { get; private set; }
+        public int RowMax { get; private set; }
+        public int ColumnMin { get; private set; }
+        public int ColumnMax { get; private set; }
 
         public PizzaSlice(int rowMin, int rowMax, int columnMin, int columnMax)
         {
