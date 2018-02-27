@@ -32,9 +32,128 @@ namespace HashCode_Pizza
 
         public List<PizzaSlice> PerformSlice()
         {
+            int[,] plate = (int[,])mPlate.Clone();
+            List<PizzaSlice> slices;                
+            // Create greedy slicing
+            slices = PerformSlice_PhaseOne(plate);
+
+            // Try to fill the blacks
+            slices = PerformSlice_PhaseTwo(slices, plate);           
+
+            return slices;
+        }
+
+        public List<PizzaSlice> PerformSlice_PhaseTwo(List<PizzaSlice> slices, int[,] plate)
+        {
+            int nextSliceId = -1;
+            Dictionary<int, PizzaSlice> sliceHash = new Dictionary<int, PizzaSlice>();
+            foreach (PizzaSlice slice in slices)
+            {
+                nextSliceId = Math.Min(nextSliceId, slice.ID - 1);
+                sliceHash.Add(slice.ID, slice);
+            }
+
+            for (int r = 0; r < mRows; r++)
+            {
+                for (int c = 0; c < mColumns; c++)
+                {
+                    PizzaSlice maxSlice = GetMaxSliceExtentionAt(plate, sliceHash, r, c, nextSliceId);
+                    if (maxSlice != null)
+                    {
+                        // Shrink existing slices
+                        Dictionary<int, int> sliceContent = maxSlice.GetSliceContent(plate);
+                        foreach (int overlapSliceId in sliceContent.Keys)
+                        {
+                            if (overlapSliceId > 0)
+                                continue;
+
+                            PizzaSlice existingSlice = sliceHash[overlapSliceId];
+                            PizzaSlice existingAfterOverlap = existingSlice.BuildShirnkedSliceWithOverlapping(maxSlice);
+                            sliceHash[existingSlice.ID] = existingAfterOverlap;
+                        }
+
+                        maxSlice.RemoveSliceFromPlate(plate);
+                        sliceHash.Add(maxSlice.ID, maxSlice);
+
+                        nextSliceId--;
+                    }
+                }
+            }
+
+            return new List<PizzaSlice>(sliceHash.Values);
+        }
+
+        public PizzaSlice GetMaxSliceExtentionAt(int[,] plate, Dictionary<int, PizzaSlice> sliceHash, int row, int column, int nextSliceId)
+        {
+            PizzaSlice maxSlice = null;
+            int maxSliceIngredients = 0;
+
+            for (int r = row; r < mRows; r++)
+            {
+                for (int c = column; c < mColumns; c++)
+                {
+                    int isValidSlice = IsValidSlice(this.mPlate, row, r, column, c);
+                    if ((isValidSlice == CHECK_SLICE_TOO_BIG) || (isValidSlice == CHECK_SLICE_INVALID_SLICE))
+                        break;
+
+                    if (isValidSlice != CHECK_SLICE_VALID)
+                        continue;
+
+                    PizzaSlice newSlice = new PizzaSlice(nextSliceId, row, r, column, c);
+
+                    // The new slice contains positions previously not in any slice
+                    int newSliceIngredients = newSlice.CountIngredients(plate);
+                    if (newSliceIngredients == 0)
+                        continue;
+
+                    // Check overlapping slices are still valid slices
+                    Dictionary<int, int> sliceContent = newSlice.GetSliceContent(plate);
+                    bool isValidOverlap = true;
+                    foreach (int overlapSliceId in sliceContent.Keys)
+                    {
+                        if (overlapSliceId > 0)
+                            continue;
+
+                        PizzaSlice existingSlice = sliceHash[overlapSliceId];
+                        PizzaSlice existingAfterOverlap = existingSlice.BuildShirnkedSliceWithOverlapping(newSlice);
+                        if (existingAfterOverlap == null)
+                        {
+                            isValidOverlap = false;
+                            break;
+                        }
+
+                        if (this.IsValidSlice(this.mPlate, 
+                            existingAfterOverlap.RowMin, existingAfterOverlap.RowMax, 
+                            existingAfterOverlap.ColumnMin, existingAfterOverlap.ColumnMax) != CHECK_SLICE_VALID)
+                        {
+                            isValidOverlap = false;
+                            break;
+                        }
+                    }
+                    if (isValidOverlap == false)
+                        continue;
+
+                    // Check if the new slice is bettter than existing max
+                    if (maxSlice == null)
+                    {
+                        maxSlice = newSlice;
+                        maxSliceIngredients = newSliceIngredients;
+                    }
+                    else if (maxSliceIngredients < newSliceIngredients)
+                    {
+                        maxSlice = newSlice;
+                        maxSliceIngredients = newSliceIngredients;
+                    }
+                }
+            }
+
+            return maxSlice;
+        }
+
+        public List<PizzaSlice> PerformSlice_PhaseOne(int[,] plate)
+        {
             List<PizzaSlice> slices = new List<PizzaSlice>();
             int nextSliceId = -1;
-            int[,] plate = (int[,])mPlate.Clone();
 
             for (int r = 0; r < mRows; r++)
             {
