@@ -2,13 +2,15 @@
 {
     class PizzaSlice
     {
+        public int ID { get; private set; }
         public int RowMin { get; private set; }
         public int RowMax { get; private set; }
         public int ColumnMin { get; private set; }
         public int ColumnMax { get; private set; }
 
-        public PizzaSlice(int rowMin, int rowMax, int columnMin, int columnMax)
+        public PizzaSlice(int id, int rowMin, int rowMax, int columnMin, int columnMax)
         {
+            this.ID = id;
             this.RowMin = rowMin;
             this.ColumnMin = columnMin;
             this.ColumnMax = columnMax;
@@ -24,7 +26,7 @@
         {
             for (int r = RowMin; r <= RowMax; r++)
                 for (int c = ColumnMin; c <= ColumnMax; c++)
-                    plate[r, c] = 0;
+                    plate[r, c] = this.ID;
         }
     }
 }

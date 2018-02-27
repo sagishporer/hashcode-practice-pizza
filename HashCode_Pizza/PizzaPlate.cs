@@ -33,6 +33,7 @@ namespace HashCode_Pizza
         public List<PizzaSlice> PerformSlice()
         {
             List<PizzaSlice> slices = new List<PizzaSlice>();
+            int nextSliceId = -1;
             //int nextRow = -1;
             //int nextColumn = -1;
             int[,] plate = (int[,])mPlate.Clone();
@@ -41,13 +42,14 @@ namespace HashCode_Pizza
             {
                 for (int c = 0; c < mColumns; c++)
                 {
-                    if (mPlate[r, c] != 0)
+                    if (mPlate[r, c] > 0)
                     {
-                        PizzaSlice maxSlice = GetMaxSliceAt(plate, r, c);
+                        PizzaSlice maxSlice = GetMaxSliceAt(plate, r, c, nextSliceId);
                         if (maxSlice != null)
                         {
                             maxSlice.RemoveSliceFromPlate(plate);
                             slices.Add(maxSlice);
+                            nextSliceId--;
                         }
                     }
                 }
@@ -56,7 +58,7 @@ namespace HashCode_Pizza
             return slices;
         }
 
-        public PizzaSlice GetMaxSliceAt(int[,] plate, int row, int column)
+        public PizzaSlice GetMaxSliceAt(int[,] plate, int row, int column, int nextSliceId)
         {
             PizzaSlice maxSlice = null;
 
@@ -70,7 +72,7 @@ namespace HashCode_Pizza
 
                     if (isValidSlice == CHECK_SLICE_VALID)
                     {
-                        PizzaSlice newSlice = new PizzaSlice(row, r, column, c);
+                        PizzaSlice newSlice = new PizzaSlice(nextSliceId, row, r, column, c);
                         if (maxSlice == null)
                             maxSlice = newSlice;
                         else if (maxSlice.GetSize() < newSlice.GetSize())
@@ -95,7 +97,7 @@ namespace HashCode_Pizza
                 for (int c = minCol; c <= maxCol; c++)
                 {
                     int plateVal = plate[r, c];
-                    if (plateVal == 0)
+                    if (plateVal <= 0)
                         return CHECK_SLICE_INVALID_SLICE;
                     else if (plateVal == 1)
                         count1++;
