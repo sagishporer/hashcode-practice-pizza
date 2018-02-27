@@ -34,8 +34,6 @@ namespace HashCode_Pizza
         {
             List<PizzaSlice> slices = new List<PizzaSlice>();
             int nextSliceId = -1;
-            //int nextRow = -1;
-            //int nextColumn = -1;
             int[,] plate = (int[,])mPlate.Clone();
 
             for (int r = 0; r < mRows; r++)
