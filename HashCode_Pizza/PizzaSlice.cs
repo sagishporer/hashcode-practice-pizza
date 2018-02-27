@@ -24,6 +24,18 @@ namespace HashCode_Pizza
             return (RowMax - RowMin + 1) * (ColumnMax - ColumnMin + 1);
         }
 
+        public int CountIngredients(int[,] plate)
+        {
+            int count = 0;
+
+            for (int r = RowMin; r <= RowMax; r++)
+                for (int c = ColumnMin; c <= ColumnMax; c++)
+                    if (plate[r, c] > 0)
+                        count++;
+
+            return count;
+        }
+
         public Dictionary<int, int> GetSliceContent(int[,] plate)
         {
             Dictionary<int, int> ingredients = new Dictionary<int, int>();
