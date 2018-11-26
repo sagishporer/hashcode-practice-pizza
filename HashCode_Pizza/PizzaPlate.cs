@@ -43,7 +43,7 @@ namespace HashCode_Pizza
             return slices;
         }
 
-        public List<PizzaSlice> PerformSlice_PhaseTwo(List<PizzaSlice> slices, int[,] plate)
+        private List<PizzaSlice> PerformSlice_PhaseTwo(List<PizzaSlice> slices, int[,] plate)
         {
             int nextSliceId = -1;
             Dictionary<int, PizzaSlice> sliceHash = new Dictionary<int, PizzaSlice>();
@@ -86,7 +86,7 @@ namespace HashCode_Pizza
             return new List<PizzaSlice>(sliceHash.Values);
         }
 
-        public PizzaSlice GetMaxSliceExtentionAt(int[,] plate, Dictionary<int, PizzaSlice> sliceHash, int row, int column, int nextSliceId)
+        private PizzaSlice GetMaxSliceExtentionAt(int[,] plate, Dictionary<int, PizzaSlice> sliceHash, int row, int column, int nextSliceId)
         {
             PizzaSlice maxSlice = null;
             int maxSliceIngredients = 0;
@@ -155,7 +155,7 @@ namespace HashCode_Pizza
             return maxSlice;
         }
 
-        public int IsValidSlice(int[,] plate, int minRow, int maxRow, int minCol, int maxCol)
+        private int IsValidSlice(int[,] plate, int minRow, int maxRow, int minCol, int maxCol)
         {
             int count1 = 0;
             int count2 = 0;
