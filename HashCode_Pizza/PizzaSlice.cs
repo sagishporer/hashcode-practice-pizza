@@ -90,7 +90,8 @@ namespace HashCode_Pizza
             // Full column overlap
             if ((newSlice.ColumnMin <= this.ColumnMin) && (newSlice.ColumnMax >= this.ColumnMax))
             {
-                if ((newSlice.RowMin >= this.RowMin) && (newSlice.RowMax <= this.RowMax))
+                // New slice in the middle of old slice
+                if ((newSlice.RowMin > this.RowMin) && (newSlice.RowMax < this.RowMax))
                     return null;
 
                 // Above
@@ -105,7 +106,8 @@ namespace HashCode_Pizza
             // Full row overlap
             if ((newSlice.RowMin <= this.RowMin) && (newSlice.RowMax >= this.RowMax))
             {
-                if ((newSlice.ColumnMin >= this.ColumnMin) && (newSlice.ColumnMax <= this.ColumnMax))
+                // New slice in the middle of old slice
+                if ((newSlice.ColumnMin > this.ColumnMin) && (newSlice.ColumnMax < this.ColumnMax))
                     return null;
 
                 // Left
