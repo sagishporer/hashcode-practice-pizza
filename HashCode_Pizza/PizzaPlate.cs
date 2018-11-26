@@ -30,6 +30,8 @@ namespace HashCode_Pizza
             mMaxSliceSize = maxSliceSize;
         }
 
+        public int GetSize() { return mColumns * mRows; }
+
         public List<PizzaSlice> PerformSlice()
         {
             int[,] plate = (int[,])mPlate.Clone();

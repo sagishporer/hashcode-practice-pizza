@@ -14,6 +14,10 @@ namespace HashCode_Pizza
 
             List<PizzaSlice> slices = pizzaPlate.PerformSlice();
 
+            Console.WriteLine("Max theoretical score: {0}", pizzaPlate.GetSize());
+            int solutionScore = slices.Sum(item => item.GetSize());
+            Console.WriteLine("Solution score: {0}", solutionScore);
+
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(args[0] + ".out"))
             {
                 sw.WriteLine(slices.Count);
