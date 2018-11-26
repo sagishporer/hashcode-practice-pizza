@@ -35,23 +35,17 @@ namespace HashCode_Pizza
         public List<PizzaSlice> PerformSlice()
         {
             int[,] plate = (int[,])mPlate.Clone();
-            List<PizzaSlice> slices = new List<PizzaSlice>();                
 
             // Create greedy slicing. Iterating this phase did not yield better results
-            slices = PerformSlice_PhaseTwo(slices, plate);
+            List<PizzaSlice> slices = PerformSlice_PhaseTwo(plate);
 
             return slices;
         }
 
-        private List<PizzaSlice> PerformSlice_PhaseTwo(List<PizzaSlice> slices, int[,] plate)
+        private List<PizzaSlice> PerformSlice_PhaseTwo(int[,] plate)
         {
             int nextSliceId = -1;
             Dictionary<int, PizzaSlice> sliceHash = new Dictionary<int, PizzaSlice>();
-            foreach (PizzaSlice slice in slices)
-            {
-                nextSliceId = Math.Min(nextSliceId, slice.ID - 1);
-                sliceHash.Add(slice.ID, slice);
-            }
 
             for (int r = 0; r < mRows; r++)
             {
