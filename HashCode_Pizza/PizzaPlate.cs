@@ -47,37 +47,56 @@ namespace HashCode_Pizza
             int nextSliceId = -1;
             Dictionary<int, PizzaSlice> sliceHash = new Dictionary<int, PizzaSlice>();
 
+            // Slice Pizza
             for (int r = 0; r < mRows; r++)
             {
                 for (int c = 0; c < mColumns; c++)
                 {
-                    if (plate[r, c] < 0)
-                        continue;
-
-                    PizzaSlice maxSlice = GetMaxSliceExtentionAt(plate, sliceHash, r, c, nextSliceId);
-                    if (maxSlice != null)
-                    {
-                        // Shrink existing slices
-                        Dictionary<int, int> sliceContent = maxSlice.GetSliceContent(plate);
-                        foreach (int overlapSliceId in sliceContent.Keys)
-                        {
-                            if (overlapSliceId > 0)
-                                continue;
-
-                            PizzaSlice existingSlice = sliceHash[overlapSliceId];
-                            PizzaSlice existingAfterOverlap = existingSlice.BuildShirnkedSliceWithOverlapping(maxSlice);
-                            sliceHash[existingSlice.ID] = existingAfterOverlap;
-                        }
-
-                        maxSlice.RemoveSliceFromPlate(plate);
-                        sliceHash.Add(maxSlice.ID, maxSlice);
-
+                    if (SlicePizzaAtPosition(plate, r, c, sliceHash, nextSliceId) == true)
                         nextSliceId--;
-                    }
                 }
             }
 
+            // Try re-slicing
+            List<PizzaSlice> slices = new List<PizzaSlice>(sliceHash.Values);
+            foreach (PizzaSlice slice in slices)
+            {
+                sliceHash.Remove(slice.ID);
+                slice.RestoreSliceToPlate(plate, mPlate);
+
+                SlicePizzaAtPosition(plate, slice.RowMin, slice.ColumnMin, sliceHash, slice.ID);
+            }
+
             return new List<PizzaSlice>(sliceHash.Values);
+        }
+
+        private bool SlicePizzaAtPosition(int[,] plate, int r, int c, Dictionary<int, PizzaSlice> sliceHash, int nextSliceId)
+        {
+            if (plate[r, c] < 0)
+                return false;
+
+            PizzaSlice maxSlice = GetMaxSliceExtentionAt(plate, sliceHash, r, c, nextSliceId);
+            if (maxSlice != null)
+            {
+                // Shrink existing slices
+                Dictionary<int, int> sliceContent = maxSlice.GetSliceContent(plate);
+                foreach (int overlapSliceId in sliceContent.Keys)
+                {
+                    if (overlapSliceId > 0)
+                        continue;
+
+                    PizzaSlice existingSlice = sliceHash[overlapSliceId];
+                    PizzaSlice existingAfterOverlap = existingSlice.BuildShirnkedSliceWithOverlapping(maxSlice);
+                    sliceHash[existingSlice.ID] = existingAfterOverlap;
+                }
+
+                maxSlice.RemoveSliceFromPlate(plate);
+                sliceHash.Add(maxSlice.ID, maxSlice);
+
+                return true;
+            }
+
+            return false;
         }
 
         private PizzaSlice GetMaxSliceExtentionAt(int[,] plate, Dictionary<int, PizzaSlice> sliceHash, int row, int column, int nextSliceId)
