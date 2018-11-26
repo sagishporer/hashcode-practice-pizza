@@ -60,6 +60,13 @@ namespace HashCode_Pizza
                     plate[r, c] = this.ID;
         }
 
+        public void RestoreSliceToPlate(int[,] plate, int[,] sourcePlace)
+        {
+            for (int r = RowMin; r <= RowMax; r++)
+                for (int c = ColumnMin; c <= ColumnMax; c++)
+                    plate[r, c] = sourcePlace[r, c];
+        }
+
         public static int GetSlicesSize(ICollection<PizzaSlice> slices)
         {
             int size = 0;
