@@ -1,4 +1,4 @@
-# Hash Code 2018 practice problem solution: Pizza
+# Hash Code 2017 & 2018 practice problem solution: Pizza
 
 [Problem definition & data files](https://bytefreaks.net/google/practice-problem-for-google-hash-code-2018)
 
@@ -9,10 +9,10 @@ Algorithm type: greedy.
 4. If scan not completed - go to 1.
 5. Rescan slices, retry growing the slices.
 
-Solution score: 959,212 
+Solution score: 959,202 
 - Example: 15
 - Small: 42
-- Medium: 49,585
-- Big: 909,570
+- Medium: 49,576
+- Big: 909,569
 
 Please ignore code style. The objective was to complete the task as fast as possible.
