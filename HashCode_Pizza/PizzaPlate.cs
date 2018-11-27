@@ -109,12 +109,15 @@ namespace HashCode_Pizza
             List<PizzaSlice> slices = new List<PizzaSlice>(sliceHash.Values);
             foreach (PizzaSlice slice in slices)
             {
-                sliceHash.Remove(slice.ID);
-                slice.RestoreSliceToPlate(plate, mPlate);
+                PizzaSlice currentSlice = sliceHash[slice.ID];
 
-                SlicePizzaAtPosition(plate, slice.RowMin, slice.ColumnMin, sliceHash, slice.ID);
+                sliceHash.Remove(currentSlice.ID);
+                currentSlice.RestoreSliceToPlate(plate, mPlate);
+
+                SlicePizzaAtPosition(plate, currentSlice.RowMin, currentSlice.ColumnMin, sliceHash, currentSlice.ID);
             }
-            
+
+
             return new List<PizzaSlice>(sliceHash.Values);
         }
 
