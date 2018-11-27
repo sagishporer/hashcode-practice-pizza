@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,9 +15,15 @@ namespace HashCode_Pizza
 
             List<PizzaSlice> slices = pizzaPlate.PerformSlice();
 
+            if (pizzaPlate.IsValidSlicing(slices) == false)
+                Console.WriteLine("ERROR: Invalid slicing");
+
             Console.WriteLine("Max theoretical score: {0}", pizzaPlate.GetSize());
             int solutionScore = slices.Sum(item => item.GetSize());
             Console.WriteLine("Solution score: {0}", solutionScore);
+
+            Bitmap bitmap = pizzaPlate.generateSlicingBitmap(slices);
+            bitmap.Save(args[0] + ".png", System.Drawing.Imaging.ImageFormat.Png);
 
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(args[0] + ".out"))
             {
