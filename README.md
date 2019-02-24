@@ -1,4 +1,4 @@
-# Hash Code 2017 & 2018 practice problem solution: Pizza
+# Hash Code 2017, 2018 & 2019 practice problem solution: Pizza
 
 [Problem definition & data files](https://bytefreaks.net/google/practice-problem-for-google-hash-code-2018)
 
